@@ -118,7 +118,7 @@ const Townhall = () => {
               <div className="absolute bottom-8 right-8">
                 <div className="text-white text-xl font-medium">5:00 PM</div>
               </div>
-
+              /* Bottom arrow */
               {/* Bottom arrow */}
               <div className="absolute bottom-0 left-[75%] transform -translate-x-1/2 translate-y-1/2">
                 <div
