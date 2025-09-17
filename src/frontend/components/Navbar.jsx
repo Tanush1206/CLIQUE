@@ -15,10 +15,10 @@ const Navbar = () => {
 
       <div className="flex items-center">
         <Link
-          to="/about"
+          to="/leaderboard"
           className="text-black font-semibold hover:text-gray-600 transition-colors duration-200"
         >
-          About
+          Leaderboard
         </Link>
       </div>
     </nav>

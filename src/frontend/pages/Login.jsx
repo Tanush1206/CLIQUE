@@ -36,11 +36,10 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#2F2F2F] text-white flex">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white flex">
       {/* Left side - Login Form */}
-      <div className="w-full md:w-1/2 p-8 flex flex-col justify-center items-center relative z-10" style={{ 
-        backgroundColor: '#2F2F2F',
-        boxShadow: '4px 0 15px rgba(0, 0, 0, 0.1)'
+      <div className="w-full md:w-1/2 p-8 flex flex-col justify-center items-center relative z-10 bg-gradient-to-br from-slate-900/90 via-blue-900/90 to-slate-800/90 backdrop-blur-sm" style={{ 
+        boxShadow: '4px 0 15px rgba(0, 0, 0, 0.2)'
       }}>
         <div className="w-full max-w-md transform transition-all duration-300 hover:scale-[1.01]">
           {/* Scaler Logo */}
@@ -59,7 +58,7 @@ export default function Login() {
           {/* Google Sign In Button */}
           <button
             onClick={handleGoogleLogin}
-            className="w-full flex items-center justify-center gap-3 bg-transparent text-white py-3 px-4 rounded-full font-medium mb-6 border border-[#AFAFAF] hover:bg-white/5 transition-colors"
+            className="w-full flex items-center justify-center gap-3 bg-white/10 backdrop-blur-sm text-white py-3 px-4 rounded-full font-medium mb-6 border border-white/20 hover:bg-white/20 transition-all duration-300 transform hover:scale-[1.02]"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
@@ -85,17 +84,17 @@ export default function Login() {
           {/* Divider */}
           <div className="relative mb-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-[#AFAFAF]/30"></div>
+              <div className="w-full border-t border-white/20"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-[#2F2F2F] text-gray-400">or</span>
+              <span className="px-2 bg-gradient-to-br from-slate-900/90 via-blue-900/90 to-slate-800/90 text-blue-200">or</span>
             </div>
           </div>
 
           {/* Email Form */}
           <form onSubmit={handleLogin} className="space-y-4">
             {error && (
-              <div className="bg-red-900/20 border-l-4 border-red-500 p-4 text-red-100">
+              <div className="bg-red-900/20 border-l-4 border-red-400 p-4 text-red-100 backdrop-blur-sm rounded">
                 <p className="text-sm">{error}</p>
               </div>
             )}
@@ -106,7 +105,7 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email : student@sst.scaler.com"
-                className="w-full px-4 py-3 bg-transparent border border-[#AFAFAF] rounded-full text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all duration-300"
                 required
               />
             </div>
@@ -114,7 +113,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={isLoading}
-              className={`w-full py-3 px-4 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-full transition-all duration-200 transform hover:scale-[1.02] ${
+              className={`w-full py-3 px-4 bg-blue-600/80 backdrop-blur-sm hover:bg-blue-500/80 text-white font-medium rounded-full transition-all duration-300 transform hover:scale-[1.02] border border-blue-400/30 ${
                 isLoading ? 'opacity-70 cursor-not-allowed' : 'shadow-lg hover:shadow-blue-500/30'
               }`}
             >
@@ -122,7 +121,7 @@ export default function Login() {
             </button>
           </form>
           
-          <p className="mt-8 text-center text-gray-400 italic">
+          <p className="mt-8 text-center text-blue-200 italic">
             "Become 1% better every day"
           </p>
         </div>
