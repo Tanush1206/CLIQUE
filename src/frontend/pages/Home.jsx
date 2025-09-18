@@ -27,25 +27,37 @@ export default function Home() {
             <div className="grid grid-cols-2 gap-6 mt-10 w-full max-w-2xl">
               <Link
                 to="/townhall"
-                className="px-8 py-5 bg-blue-600/80 backdrop-blur-sm text-white rounded-full font-semibold text-xl text-center hover:bg-blue-500/80 transition-all duration-300 transform hover:scale-105 shadow-lg border border-blue-400/30"
+                className="px-8 py-5 bg-white/10 backdrop-blur-xl text-white rounded-full font-semibold text-xl text-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105 border border-white/20 shadow-lg hover:shadow-white/10"
+                style={{
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+                }}
               >
                 TownHall
               </Link>
               <Link
                 to="/fest"
-                className="px-8 py-5 bg-white/10 backdrop-blur-sm text-white rounded-full font-semibold text-xl text-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105 border border-white/20"
+                className="px-8 py-5 bg-white/5 backdrop-blur-xl text-white rounded-full font-semibold text-xl text-center hover:bg-white/15 transition-all duration-300 transform hover:scale-105 border border-white/10 shadow-lg hover:shadow-white/5"
+                style={{
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                }}
               >
                 Fest
               </Link>
               <Link
                 to="/hackathon"
-                className="px-8 py-5 bg-white/10 backdrop-blur-sm text-white rounded-full font-semibold text-xl text-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105 border border-white/20"
+                className="px-8 py-5 bg-white/5 backdrop-blur-xl text-white rounded-full font-semibold text-xl text-center hover:bg-white/15 transition-all duration-300 transform hover:scale-105 border border-white/10 shadow-lg hover:shadow-white/5"
+                style={{
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                }}
               >
                 Hackathon
               </Link>
               <Link
                 to="/cultural"
-                className="px-8 py-5 bg-blue-600/80 backdrop-blur-sm text-white rounded-full font-semibold text-xl text-center hover:bg-blue-500/80 transition-all duration-300 transform hover:scale-105 shadow-lg border border-blue-400/30"
+                className="px-8 py-5 bg-white/10 backdrop-blur-xl text-white rounded-full font-semibold text-xl text-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105 border border-white/20 shadow-lg hover:shadow-white/10"
+                style={{
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+                }}
               >
                 Cultural
               </Link>

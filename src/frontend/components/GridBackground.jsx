@@ -70,39 +70,39 @@ const GridBackground = () => {
   };
 
   return (
-    <div className="hidden md:flex md:w-1/2 overflow-hidden bg-white/5 items-center justify-center relative h-screen">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-blue-50/10 to-white/5"></div>
+    <div className="hidden md:flex md:w-1/2 overflow-hidden items-center justify-center relative h-screen bg-gradient-to-br from-slate-900/20 via-blue-900/30 to-slate-800/20">
+      {/* Enhanced Background with multiple layers */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-400/5 via-purple-500/5 to-cyan-400/5"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/10 to-transparent"></div>
       
       {/* Main container */}
-      <div className="w-full max-w-3xl h-full p-8 relative z-10 flex items-center">
+      <div className="w-full max-w-3xl h-full p-8 relative z-10 flex items-center backdrop-blur-sm">
         {/* Outer grid with 7 rows */}
-        <div className="grid grid-cols-3 gap-6 w-full">
+        <div className="grid grid-cols-3 gap-4 w-full">
           {/* Left Column - 7 rows */}
-          <div className="flex flex-col justify-center space-y-6">
+          <div className="flex flex-col justify-center space-y-4">
             {gridItems
               .filter(item => item.col === 1)
               .map(item => (
                 <div 
                   key={item.id}
-                  className={`${getSizeClasses(item.size)} rounded-3xl mx-auto transition-all duration-300 overflow-hidden`}
+                  className={`${getSizeClasses(item.size)} rounded-2xl mx-auto transition-all duration-500 overflow-hidden hover:scale-105 hover:rotate-1 group cursor-pointer`}
                   style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                    border: '1px solid rgba(255, 255, 255, 0.12)',
-                    backdropFilter: 'blur(8px)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    backdropFilter: 'blur(20px)',
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
                   }}
                 >
                   {item.image && (
                     <img 
                       src={item.image} 
                       alt={`Grid item ${item.id}`}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
                       onError={(e) => {
                         // Fallback to colored background if image fails to load
                         e.target.style.display = 'none';
-                        e.target.parentNode.style.backgroundColor = item.col === 2 
-                          ? 'rgba(255, 255, 255, 0.15)' 
-                          : 'rgba(255, 255, 255, 0.08)';
+                        e.target.parentNode.style.background = 'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1))';
                       }}
                     />
                   )}
@@ -111,30 +111,29 @@ const GridBackground = () => {
           </div>
 
           {/* Middle Column - Same as outer columns */}
-          <div className="flex flex-col justify-center space-y-6">
+          <div className="flex flex-col justify-center space-y-4">
             {gridItems
               .filter(item => item.col === 2)
               .map(item => (
                 <div 
                   key={item.id}
-                  className={`${getSizeClasses(item.size)} rounded-3xl mx-auto transition-all duration-300 overflow-hidden`}
+                  className={`${getSizeClasses(item.size)} rounded-2xl mx-auto transition-all duration-500 overflow-hidden hover:scale-105 hover:-rotate-1 group cursor-pointer`}
                   style={{
                     backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                    border: '1px solid rgba(255, 255, 255, 0.12)',
-                    backdropFilter: 'blur(8px)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    backdropFilter: 'blur(20px)',
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
                   }}
                 >
                   {item.image && (
                     <img 
                       src={item.image} 
                       alt={`Grid item ${item.id}`}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
                       onError={(e) => {
                         // Fallback to colored background if image fails to load
                         e.target.style.display = 'none';
-                        e.target.parentNode.style.backgroundColor = item.col === 2 
-                          ? 'rgba(255, 255, 255, 0.15)' 
-                          : 'rgba(255, 255, 255, 0.08)';
+                        e.target.parentNode.style.background = 'linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1))';
                       }}
                     />
                   )}
@@ -143,30 +142,29 @@ const GridBackground = () => {
           </div>
 
           {/* Right Column - 7 rows */}
-          <div className="flex flex-col justify-center space-y-6">
+          <div className="flex flex-col justify-center space-y-4">
             {gridItems
               .filter(item => item.col === 3)
               .map(item => (
                 <div 
                   key={item.id}
-                  className={`${getSizeClasses(item.size)} rounded-3xl mx-auto transition-all duration-300 overflow-hidden`}
+                  className={`${getSizeClasses(item.size)} rounded-2xl mx-auto transition-all duration-500 overflow-hidden hover:scale-105 hover:rotate-1 group cursor-pointer`}
                   style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                    border: '1px solid rgba(255, 255, 255, 0.12)',
-                    backdropFilter: 'blur(8px)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    backdropFilter: 'blur(20px)',
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
                   }}
                 >
                   {item.image && (
                     <img 
                       src={item.image} 
                       alt={`Grid item ${item.id}`}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
                       onError={(e) => {
                         // Fallback to colored background if image fails to load
                         e.target.style.display = 'none';
-                        e.target.parentNode.style.backgroundColor = item.col === 2 
-                          ? 'rgba(255, 255, 255, 0.15)' 
-                          : 'rgba(255, 255, 255, 0.08)';
+                        e.target.parentNode.style.background = 'linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(168, 85, 247, 0.1))';
                       }}
                     />
                   )}
@@ -175,6 +173,12 @@ const GridBackground = () => {
           </div>
         </div>
         
+        {/* Floating particles effect */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-blue-400/20 rounded-full animate-pulse"></div>
+          <div className="absolute top-3/4 right-1/3 w-1 h-1 bg-purple-400/30 rounded-full animate-ping"></div>
+          <div className="absolute bottom-1/4 left-1/2 w-1.5 h-1.5 bg-cyan-400/25 rounded-full animate-pulse"></div>
+        </div>
       </div>
     </div>
   );
