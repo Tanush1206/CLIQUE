@@ -7,6 +7,8 @@ import Fest from "./pages/Fest";
 import Cultural from "./pages/Cultural";
 import Hackathon from "./pages/Hackathon";
 import React from 'react';
+import ProtectedRoute from './components/ProtectedRoute';
+import Leaderboard from './pages/Leaderboard';
 
 
 function App() {
@@ -15,11 +17,12 @@ function App() {
       <Route path="/" element={<Landing />} />
       
       <Route path="/login" element={<Login />} />
-      <Route path="/home" element={<Home />} />
-      <Route path="/townhall" element={<Townhall />} />
-      <Route path="/fest" element={<Fest />} />
-      <Route path="/cultural" element={<Cultural />} />
-      <Route path="/hackathon" element={<Hackathon />} />
+      <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+      <Route path="/townhall" element={<ProtectedRoute><Townhall /></ProtectedRoute>} />
+      <Route path="/fest" element={<ProtectedRoute><Fest /></ProtectedRoute>} />
+      <Route path="/cultural" element={<ProtectedRoute><Cultural /></ProtectedRoute>} />
+      <Route path="/hackathon" element={<ProtectedRoute><Hackathon /></ProtectedRoute>} />
+      <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
 
       {/* fallback */}
       <Route path="*" element={<Navigate to="/" />} />

@@ -8,31 +8,35 @@ export default function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
-    
     if (!email) {
       setError('Please enter your email');
       return;
     }
-    
     setIsLoading(true);
-    
-    // Simulate API call with timeout
-    setTimeout(() => {
-      localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('userEmail', email);
-      setIsLoading(false);
+    try {
+      const res = await fetch('http://localhost:4000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password: 'placeholder' }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Login failed');
+      }
       navigate('/home');
-    }, 1000);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
   
   const handleGoogleLogin = () => {
-    // For now, just simulate a successful Google login
-    localStorage.setItem('isLoggedIn', 'true');
-    localStorage.setItem('userEmail', 'google-user@example.com');
-    navigate('/home');
+    window.location.href = 'http://localhost:4000/api/auth/google';
   };
 
   return (
@@ -86,41 +90,8 @@ export default function Login() {
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-white/20"></div>
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-gradient-to-br from-slate-900/90 via-blue-900/90 to-slate-800/90 text-blue-200">or</span>
-            </div>
           </div>
 
-          {/* Email Form */}
-          <form onSubmit={handleLogin} className="space-y-4">
-            {error && (
-              <div className="bg-red-900/20 border-l-4 border-red-400 p-4 text-red-100 backdrop-blur-sm rounded">
-                <p className="text-sm">{error}</p>
-              </div>
-            )}
-            
-            <div>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email : student@sst.scaler.com"
-                className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all duration-300"
-                required
-              />
-            </div>
-            
-            <button
-              type="submit"
-              disabled={isLoading}
-              className={`w-full py-3 px-4 bg-blue-600/80 backdrop-blur-sm hover:bg-blue-500/80 text-white font-medium rounded-full transition-all duration-300 transform hover:scale-[1.02] border border-blue-400/30 ${
-                isLoading ? 'opacity-70 cursor-not-allowed' : 'shadow-lg hover:shadow-blue-500/30'
-              }`}
-            >
-              {isLoading ? 'Signing in...' : 'Continue'}
-            </button>
-          </form>
-          
           <p className="mt-8 text-center text-blue-200 italic">
             "Become 1% better every day"
           </p>
