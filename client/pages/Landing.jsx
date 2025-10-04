@@ -1,12 +1,31 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import React from "react";
 import Footer from "../components/Footer";
+import LoginToast from "../components/LoginToast";
 
 export default function Landing() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const showLoginToast = !!(location.state?.loginRequired && !location.state?.loggedOut);
+  const from = location.state?.from || "/home";
+
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-slate-900 via-blue-900 to-slate-800 text-white overflow-x-hidden">
       <Navbar />
+
+      {showLoginToast && (
+        <LoginToast
+          onDismiss={() => {
+            // Clear history state so the toast doesn't persist on refresh
+            navigate(location.pathname, { replace: true, state: {} });
+          }}
+          onLogin={() => {
+            // Navigate to login while preserving the intended destination
+            navigate("/login", { replace: true, state: { from } });
+          }}
+        />
+      )}
 
       {/* Main content takes up all available space, pushing the footer down */}
       <main className="flex-grow w-full flex flex-col items-center">

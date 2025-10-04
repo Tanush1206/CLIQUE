@@ -1,12 +1,31 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import GridBackground from '../components/GridBackground';
+import sst from '../assets/sst.png';
+import { useAuth } from '../components/AuthProvider';
+
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+  const { setUser } = useAuth();
+  const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+
+  // If redirected here with an OAuth error (?error=oauth or ?error=domain), show inline error
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const urlError = params.get('error');
+    if (urlError) {
+      setError(
+        urlError === 'domain'
+          ? 'Please use your @sst.scaler.com email to continue with Google.'
+          : 'Google sign-in failed. Please use your @sst.scaler.com email or try again.'
+      );
+    }
+  }, [location.search]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -17,7 +36,7 @@ export default function Login() {
     }
     setIsLoading(true);
     try {
-      const res = await fetch('http://localhost:4000/api/auth/login', {
+      const res = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -27,7 +46,10 @@ export default function Login() {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error || 'Login failed');
       }
-      navigate('/home');
+      const data = await res.json().catch(() => ({}));
+      if (data.user) setUser(data.user);
+      const from = location.state?.from || '/home';
+      navigate(from, { replace: true });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -35,8 +57,16 @@ export default function Login() {
     }
   };
   
+  // Clear displayed error while the user edits the email input
+  const onEmailChange = (v) => {
+    if (error) setError('');
+    setEmail(v);
+  };
+
   const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:4000/api/auth/google';
+    const from = location.state?.from || '/home';
+    // Server may ignore the param, but it's harmless to include
+    window.location.href = `${API_BASE}/api/auth/google?from=${encodeURIComponent(from)}`;
   };
 
   return (
@@ -49,11 +79,17 @@ export default function Login() {
           {/* Scaler Logo */}
           <div className="flex justify-center mb-8">
             <img 
-              src="/src/frontend/assets/sst.png" 
+              src={sst}
               alt="SST Logo" 
               className="h-16 w-auto"
             />
           </div>
+
+          {error && (
+            <div className="mb-4 rounded-lg bg-red-500/10 border border-red-400/30 text-red-200 px-4 py-2">
+              {error}
+            </div>
+          )}
           
           <h1 className="text-3xl font-bold text-center mb-8 text-white">
             Log In to your Scaler Account

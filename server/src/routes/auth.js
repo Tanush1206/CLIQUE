@@ -74,12 +74,21 @@ router.get(
 
 router.get(
   '/google/callback',
-  passport.authenticate('google', { session: false, failureRedirect: '/login?error=oauth' }),
+  (req, res, next) => {
+    const base = (process.env.CLIENT_ORIGIN || 'http://localhost:3001').replace(/\/$/, '');
+    // Configure a client-side failure redirect to avoid hitting the API domain for /login
+    passport.authenticate('google', {
+      session: false,
+      failureRedirect: `${base}/login?error=oauth`,
+    })(req, res, next);
+  },
   (req, res) => {
     sendToken(res, req.user);
-    const base = process.env.CLIENT_ORIGIN || 'http://localhost:5173';
-    const redirect = `${base.replace(/\/$/, '')}/home`;
-    res.redirect(redirect);
+    const base = (process.env.CLIENT_ORIGIN || 'http://localhost:3001').replace(/\/$/, '');
+    // allow client to suggest a post-login path on the same origin
+    const from = (req.query.from && String(req.query.from)) || '/home';
+    const safePath = from.startsWith('/') ? from : '/home';
+    res.redirect(`${base}${safePath}`);
   }
 );
 

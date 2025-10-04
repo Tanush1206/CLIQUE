@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import React from "react";
+import sst from "../assets/sst.png";
 
 const Footer = () => {
     return (
@@ -13,7 +14,7 @@ const Footer = () => {
         <div className="container mx-auto px-2">
           <div className="flex flex-col items-start text-center relative z-10">
             <div className="flex items-start gap-3 mb-4 transition-all duration-300 hover:scale-105">
-              <img src="/src/frontend/assets/sst.png" alt="logo" className="h-10 w-10 transition-transform duration-300 hover:rotate-12" />
+              <img src={sst} className="h-10 w-auto transition-transform duration-300 hover:scale-110" alt="Logo" />
               <span className="font-semibold text-lg text-white drop-shadow-lg">Scaler School Of Technology</span>
             </div>
             <p className="text-base text-blue-200/80 italic font-light">"Become 1% better every day"</p>
@@ -27,4 +28,4 @@ const Footer = () => {
     )
 }
 
-export default Footer ; 
+export default Footer;
