@@ -1,31 +1,7 @@
 import React, { useState } from 'react';
+import { useLeaderboard } from '../hooks/useLeaderboard';
 
-const houses = [
-  {
-    id: 1,
-    name: "PHOENIX",
-    points: 18500,
-    color: "from-orange-500 to-red-600"
-  },
-  {
-    id: 2,
-    name: "TUSKER",
-    points: 14800,
-    color: "from-gray-400 to-gray-600"
-  },
-  {
-    id: 3,
-    name: "LEO",
-    points: 12100,
-    color: "from-yellow-400 to-orange-500"
-  },
-  {
-    id: 4,
-    name: "KONG",
-    points: 11800,
-    color: "from-gray-500 to-gray-700"
-  }
-];
+// Live data will provide: [{ houseId, name, color, points }]
 
 const logoSrcByName = {
   PHOENIX: "/house/Screenshot_2025-09-22_at_7.16.54_PM-removebg-preview.png", 
@@ -124,7 +100,80 @@ function Logo3D({ src, alt, sizeClass }) {
 }
 
 const HouseLeaderboard = () => {
-  const sortedHouses = [...houses].sort((a, b) => b.points - a.points);
+  const { data, loading, error, isUsingDefaultData } = useLeaderboard();
+  // Ensure we always have at least the default houses to prevent empty states
+  const defaultHouses = [
+    { _id: '68e14603e95fcf80200e6c4a', name: 'PHOENIX', points: 0, color: '#fb923c' },
+    { _id: '68e14604e95fcf80200e6c4b', name: 'TUSKER', points: 0, color: '#9ca3af' },
+    { _id: '68e14604e95fcf80200e6c4c', name: 'LEO', points: 0, color: '#f59e0b' },
+    { _id: '68e14604e95fcf80200e6c4d', name: 'KONG', points: 0, color: '#6b7280' }
+  ];
+  
+  // Merge default houses with actual data, preserving points from actual data
+  const housesWithDefaults = defaultHouses.map(defaultHouse => {
+    // First try to find by _id (for backward compatibility)
+    let actualData = data?.find(h => h._id === defaultHouse._id);
+    // If not found, try to find by houseId (from API response)
+    if (!actualData) {
+      actualData = data?.find(h => h.houseId === defaultHouse._id);
+    }
+    
+    if (actualData) {
+      return {
+        _id: actualData.houseId || actualData._id,
+        name: actualData.name,
+        points: actualData.points,
+        color: actualData.color || defaultHouse.color
+      };
+    }
+    return defaultHouse;
+  });
+  
+  const sortedHouses = [...housesWithDefaults].sort((a, b) => b.points - a.points);
+
+  // Show loading skeleton if it's the initial load and we don't have data yet
+  if (loading && isUsingDefaultData) {
+    return (
+      <div className="min-h-[50vh] w-full flex items-center justify-center">
+        <div className="animate-pulse flex flex-col items-center">
+          <div className="h-8 w-48 bg-white/10 rounded mb-4"></div>
+          <div className="flex space-x-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex flex-col items-center">
+                <div className="w-32 h-32 bg-white/5 rounded-full mb-4"></div>
+                <div className="h-8 w-8 bg-white/10 rounded-full mb-2"></div>
+                <div className="h-6 w-24 bg-white/10 rounded"></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-[50vh] w-full flex items-center justify-center">
+        <div className="text-center p-6 bg-red-500/10 rounded-xl border border-red-500/30 max-w-md">
+          <div className="text-red-300 text-lg font-medium mb-2">Error Loading Leaderboard</div>
+          <p className="text-white/80 text-sm">{error}</p>
+          <p className="text-white/60 text-xs mt-2">Displaying cached data if available.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!sortedHouses || sortedHouses.length === 0) {
+    return (
+      <div className="min-h-[50vh] w-full flex items-center justify-center">
+        <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 max-w-md">
+          <div className="text-white/90 text-lg font-medium mb-2">No Leaderboard Data</div>
+          <p className="text-white/60 text-sm">The leaderboard is currently empty.</p>
+        </div>
+      </div>
+    );
+  }
+
   const podiumOrder = [sortedHouses[1], sortedHouses[0], sortedHouses[2]]; // 2nd, 1st, 3rd for podium display
 
   return (

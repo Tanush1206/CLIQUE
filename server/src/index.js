@@ -8,6 +8,9 @@ const helmet = require('helmet');
 
 const { connectToDatabase } = require('./config/db');
 const authRoutes = require('./routes/auth');
+const eventRoutes = require('./routes/events');
+const leaderboardRoutes = require('./routes/leaderboard');
+const houseRoutes = require('./routes/houses');
 
 const app = express();
 
@@ -28,6 +31,9 @@ app.get('/health', (_req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/events', eventRoutes);
+app.use('/api/leaderboard', leaderboardRoutes);
+app.use('/api/houses', houseRoutes);
 
 const PORT = process.env.PORT || 4000;
 
@@ -41,5 +47,3 @@ connectToDatabase()
     console.error('Failed to start server:', error);
     process.exit(1);
   });
-
-
