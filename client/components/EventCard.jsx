@@ -145,7 +145,7 @@ const EventCard = ({
               </a>
             )}
             
-            <div className="mt-8 mb-2 text-center">
+            <div className="mt-15 mb-8 text-center">
               <div className="text-white/60 text-xs tracking-wider font-medium">{statusText}</div>
             </div>
           </div>

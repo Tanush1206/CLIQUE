@@ -48,7 +48,7 @@ export default function Login() {
       }
       const data = await res.json().catch(() => ({}));
       if (data.user) setUser(data.user);
-      const from = location.state?.from || '/home';
+      const from = location.state?.from || '/';
       navigate(from, { replace: true });
     } catch (err) {
       setError(err.message);
@@ -64,7 +64,7 @@ export default function Login() {
   };
 
   const handleGoogleLogin = () => {
-    const from = location.state?.from || '/home';
+    const from = location.state?.from || '/';
     // Server may ignore the param, but it's harmless to include
     window.location.href = `${API_BASE}/api/auth/google?from=${encodeURIComponent(from)}`;
   };

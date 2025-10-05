@@ -75,20 +75,28 @@ router.get(
 router.get(
   '/google/callback',
   (req, res, next) => {
-    const base = (process.env.CLIENT_ORIGIN || 'http://localhost:3001').replace(/\/$/, '');
+    const base = process.env.NODE_ENV === 'production'
+      ? 'https://clique-sst.netlify.app'
+      : (process.env.CLIENT_ORIGIN || 'http://localhost:3001');
+    const redirectBase = base.replace(/\/$/, '');
+    
     // Configure a client-side failure redirect to avoid hitting the API domain for /login
     passport.authenticate('google', {
       session: false,
-      failureRedirect: `${base}/login?error=oauth`,
+      failureRedirect: `${redirectBase}/login?error=oauth`,
     })(req, res, next);
   },
   (req, res) => {
     sendToken(res, req.user);
-    const base = (process.env.CLIENT_ORIGIN || 'http://localhost:3001').replace(/\/$/, '');
+    const base = process.env.NODE_ENV === 'production'
+      ? 'https://clique-sst.netlify.app'
+      : (process.env.CLIENT_ORIGIN || 'http://localhost:3001');
+    const redirectBase = base.replace(/\/$/, '');
+    
     // allow client to suggest a post-login path on the same origin
-    const from = (req.query.from && String(req.query.from)) || '/home';
-    const safePath = from.startsWith('/') ? from : '/home';
-    res.redirect(`${base}${safePath}`);
+    const from = (req.query.from && String(req.query.from)) || '/';
+    const safePath = from.startsWith('/') ? from : '/';
+    res.redirect(`${redirectBase}${safePath}`);
   }
 );
 

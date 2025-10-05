@@ -1,26 +1,35 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
-function LoginPopup({ onClose }) {
-  const navigate = useNavigate();
-
+function LoginPopup({ onClose, onLogin }) {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-      <div className="bg-white rounded-xl shadow-lg p-6 w-80 text-center">
-        <h2 className="text-xl font-bold mb-4">Login Required</h2>
-        <p className="text-gray-600 mb-6">
+    <div className="fixed inset-0 flex items-center justify-center z-50">
+      {/* Background overlay */}
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose}></div>
+
+      {/* Popup container */}
+      <div className="relative z-10 w-[28rem] rounded-[28px] p-8 
+                      bg-white/10 backdrop-blur-2xl border border-white/20 
+                      shadow-[0_10px_40px_rgba(0,0,0,0.25)] text-center">
+        
+        {/* Title */}
+        <h2 className="text-2xl font-bold text-white mb-4">Login Required</h2>
+        <p className="text-gray-200 mb-6">
           Please login to continue and access this page.
         </p>
+
+        {/* Buttons */}
         <div className="flex justify-center gap-4">
           <button
-            onClick={() => navigate("/login")}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            onClick={onLogin}
+            className="px-6 py-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 
+                       text-white font-medium hover:opacity-90 transition shadow-lg"
           >
             Login
           </button>
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition"
+            className="px-6 py-2 rounded-full bg-white/20 border border-white/30 
+                       text-white hover:bg-white/30 transition shadow-lg"
           >
             Cancel
           </button>
