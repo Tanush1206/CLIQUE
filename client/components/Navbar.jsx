@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
 import sst from "../assets/sst.png";
 import { useAuth } from "./AuthProvider";
+import { API_BASE } from "../lib/api";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -9,7 +10,6 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
 
-  const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
   // Deterministic liquid-glass color per user
   const glassPalettes = [

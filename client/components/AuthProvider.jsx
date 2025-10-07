@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { API_BASE } from "../lib/api";
 
 const AuthContext = createContext({ user: null, loading: true, setUser: () => {} });
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
   useEffect(() => {
     let mounted = true;
