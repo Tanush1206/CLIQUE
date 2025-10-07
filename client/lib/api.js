@@ -1,4 +1,13 @@
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+function resolveApiBase() {
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (envUrl && String(envUrl).trim()) return String(envUrl);
+  if (typeof window !== 'undefined' && window.location && window.location.origin) {
+    return window.location.origin;
+  }
+  return 'http://localhost:4000';
+}
+
+const API_BASE = resolveApiBase();
 
 export function api(path, options = {}) {
   return fetch(`${API_BASE}${path}`, {

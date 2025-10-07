@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import GridBackground from '../components/GridBackground';
 import sst from '../assets/sst.png';
 import { useAuth } from '../components/AuthProvider';
+import { API_BASE } from '../lib/api';
 
 
 export default function Login() {
@@ -12,7 +13,6 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const { setUser } = useAuth();
-  const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
   // If redirected here with an OAuth error (?error=oauth or ?error=domain), show inline error
   useEffect(() => {
@@ -65,8 +65,8 @@ export default function Login() {
 
   const handleGoogleLogin = () => {
     const from = location.state?.from || '/home';
-    // Server may ignore the param, but it's harmless to include
-    window.location.href = `${API_BASE}/api/auth/google?from=${encodeURIComponent(from)}`;
+    const base = API_BASE.replace(/\/$/, '');
+    window.location.href = `${base}/api/auth/google?from=${encodeURIComponent(from)}`;
   };
 
   return (
