@@ -18,6 +18,19 @@ function sendToken(res, user) {
   });
 }
 
+// Determine the client base URL to redirect back to after auth
+function getClientBase(req) {
+  const envBase = process.env.CLIENT_ORIGIN && String(process.env.CLIENT_ORIGIN).replace(/\/$/, '');
+  if (envBase) return envBase;
+  // Fallback to the request Origin header when allowed by CORS (e.g., Netlify site)
+  const origin = req.get('origin');
+  if (origin) return origin.replace(/\/$/, '');
+  // Last resort: infer from forwarded headers (useful behind proxies)
+  const proto = req.get('x-forwarded-proto') || req.protocol || 'http';
+  const host = req.get('x-forwarded-host') || req.get('host') || 'localhost:3001';
+  return `${proto}://${host}`.replace(/\/$/, '');
+}
+
 // Registration disabled: users should log in with Google or existing credentials
 router.all('/register', (_req, res) => {
   return res.status(405).json({ error: 'Registration disabled. Use Google login.' });
@@ -44,7 +57,9 @@ router.post(
 );
 
 router.post('/logout', (req, res) => {
-  res.clearCookie('auth_token', { httpOnly: true, sameSite: 'lax' });
+  const isProd = process.env.NODE_ENV === 'production';
+  // Cookie must be cleared with the same attributes it was set with
+  res.clearCookie('auth_token', { httpOnly: true, sameSite: isProd ? 'none' : 'lax', secure: isProd });
   res.json({ ok: true });
 });
 
@@ -75,7 +90,7 @@ router.get(
 router.get(
   '/google/callback',
   (req, res, next) => {
-    const base = (process.env.CLIENT_ORIGIN || 'http://localhost:3001').replace(/\/$/, '');
+    const base = getClientBase(req);
     // Configure a client-side failure redirect to avoid hitting the API domain for /login
     passport.authenticate('google', {
       session: false,
@@ -84,7 +99,7 @@ router.get(
   },
   (req, res) => {
     sendToken(res, req.user);
-    const base = (process.env.CLIENT_ORIGIN || 'http://localhost:3001').replace(/\/$/, '');
+    const base = getClientBase(req);
     // allow client to suggest a post-login path on the same origin
     const from = (req.query.from && String(req.query.from)) || '/home';
     const safePath = from.startsWith('/') ? from : '/home';
@@ -93,5 +108,3 @@ router.get(
 );
 
 module.exports = router;
-
-
