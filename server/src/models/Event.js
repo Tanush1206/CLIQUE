@@ -23,4 +23,5 @@ const EventSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+//random
 module.exports = mongoose.model('Event', EventSchema);
