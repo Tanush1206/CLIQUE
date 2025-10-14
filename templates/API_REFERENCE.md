@@ -1,173 +1,122 @@
 # CLIQUE API Reference
 
-This document outlines all available API endpoints for the CLIQUE application. All API routes are prefixed with `/api`.
+Complete API endpoint documentation for the CLIQUE application. All routes are prefixed with `/api`.
+
+> **Note**: For request examples, see `API_TEMPLATES.md`. For house/event IDs, see `IDS_REFERENCE.md`.
 
 ## Authentication
 
 ### `POST /api/auth/google`
-Initiate Google OAuth login.
+Initiate Google OAuth login flow.
 
 ### `GET /api/auth/google/callback`
-OAuth callback URL (handled by Passport).
+OAuth callback handler (managed by Passport).
 
 ### `GET /api/auth/me`
-Get current user information.
-- **Headers**:
-  - `Authorization: Bearer <token>`
+Retrieve current authenticated user information.
+- **Auth Required**: Yes
 
 ### `POST /api/auth/logout`
-Log out the current user.
-- **Headers**:
-  - `Authorization: Bearer <token>`
+Log out current user.
+- **Auth Required**: Yes
 
 ## Events
 
 ### `GET /api/events`
-Get all events.
+Retrieve all events with optional filters.
 - **Query Parameters**:
-  - `category`: Filter by category (fest, hackathon, cultural, townhall)
-  - `status`: Filter by status (upcoming, ongoing, past)
-  - `limit`: Limit number of results
-  - `page`: Pagination page number
+  - `category`: fest | hackathon | cultural | townhall | other
+  - `status`: upcoming | ongoing | past
+  - `limit`: Number (default: 20)
+  - `page`: Number (default: 1)
 
 ### `GET /api/events/:id`
-Get a single event by ID.
+Get single event by MongoDB ObjectId.
 
 ### `POST /api/events`
-Create a new event (Admin only).
-- **Headers**:
-  - `Content-Type: application/json`
-  - `Authorization: Bearer <admin_token>`
-- **Body**: (Event object)
-  ```json
-  {
-    "title": "Event Title",
-    "description": "Event description",
-    "category": "fest",
-    "startAt": "2025-12-31T18:00:00.000Z",
-    "endAt": "2025-12-31T22:00:00.000Z",
-    "location": "Venue Name",
-    "registrationLink": "https://forms.gle/...",
-    "registrationLinksByHouse": {
-      "PHOENIX": "https://forms.gle/...",
-      "TUSKER": "https://forms.gle/...",
-      "LEO": "https://forms.gle/...",
-      "KONG": "https://forms.gle/..."
-    },
-    "isVisible": true
-  }
-  ```
+Create new event.
+- **Auth Required**: Admin only
+- **Body**: See `EVENT_TEMPLATE.md` for examples
 
 ### `PUT /api/events/:id`
-Update an existing event (Admin only).
-- **Headers**:
-  - `Content-Type: application/json`
-  - `Authorization: Bearer <admin_token>`
-- **Body**: (Partial event object with fields to update)
+Update existing event (partial updates supported).
+- **Auth Required**: Admin only
 
 ### `DELETE /api/events/:id`
-Delete an event (Admin only).
-- **Headers**:
-  - `Authorization: Bearer <admin_token>`
+Permanently delete event.
+- **Auth Required**: Admin only
 
 ### `PATCH /api/events/:id/visibility`
-Toggle event visibility (Admin only).
-- **Headers**:
-  - `Authorization: Bearer <admin_token>`
-- **Body**:
-  ```json
-  {
-    "isVisible": true
-  }
-  ```
+Toggle event visibility.
+- **Auth Required**: Admin only
+- **Body**: `{ "isVisible": boolean }`
 
 ## Leaderboard
 
 ### `GET /api/leaderboard`
-Get current leaderboard standings.
+Get house standings with total points.
 - **Query Parameters**:
-  - `house`: Filter by house (PHOENIX, TUSKER, LEO, KONG)
-  - `limit`: Limit number of results
+  - `house`: PHOENIX | TUSKER | LEO | KONG
+  - `limit`: Number
 
 ### `POST /api/leaderboard/award`
-Add or update house points (Admin only).
-- **Headers**:
-  - `Content-Type: application/json`
-  - `Authorization: Bearer <admin_token>`
-- **Body**:
-  ```json
-  {
-    "house": "PHOENIX",
-    "points": 10,
-    "eventId": "event123",
-    "reason": "Won Hackathon 2025"
-  }
-  ```
+Award or deduct house points.
+- **Auth Required**: Admin only
+- **Body**: See `EVENT_TEMPLATE.md` for format
+
+### `GET /api/leaderboard/history`
+Retrieve point transaction history.
+
+### `GET /api/leaderboard/stats`
+Get aggregated leaderboard statistics.
 
 ## Users
 
 ### `GET /api/users`
-Get all users (Admin only).
-- **Headers**:
-  - `Authorization: Bearer <admin_token>`
+List all users.
+- **Auth Required**: Admin only
 - **Query Parameters**:
-  - `role`: Filter by role (user, admin)
-  - `house`: Filter by house
+  - `role`: user | admin
+  - `house`: PHOENIX | TUSKER | LEO | KONG
 
 ### `GET /api/users/:id`
-Get user by ID (Admin or self).
-- **Headers**:
-  - `Authorization: Bearer <token>`
+Get user details (admin or self).
+- **Auth Required**: Yes
 
 ### `PATCH /api/users/:id/role`
-Update user role (Admin only).
-- **Headers**:
-  - `Content-Type: application/json`
-  - `Authorization: Bearer <admin_token>`
-- **Body**:
-  ```json
-  {
-    "role": "admin"
-  }
-  ```
+Update user role.
+- **Auth Required**: Admin only
+- **Body**: `{ "role": "admin" | "user" }`
 
-## House Management
+## Houses
 
 ### `GET /api/houses`
-Get all houses with current points.
+List all houses with current points.
 
-### `GET /api/houses/:name`
-Get details for a specific house.
+### `GET /api/houses/:id`
+Get house by MongoDB ObjectId.
+
+### `GET /api/houses/name/:name`
+Get house by name (PHOENIX | TUSKER | LEO | KONG).
 
 ## Event Registration
 
 ### `POST /api/registrations`
 Register for an event.
-- **Headers**:
-  - `Content-Type: application/json`
-  - `Authorization: Bearer <token>`
-- **Body**:
-  ```json
-  {
-    "eventId": "event123",
-    "house": "PHOENIX",
-    "additionalInfo": {}
-  }
-  ```
+- **Auth Required**: Yes
+- **Body**: `{ "eventId": string, "house": string, "additionalInfo": object }`
 
 ### `GET /api/registrations/event/:eventId`
-Get all registrations for an event (Admin only).
-- **Headers**:
-  - `Authorization: Bearer <admin_token>`
+Get event registrations.
+- **Auth Required**: Admin only
 
 ### `GET /api/registrations/user/:userId`
-Get all registrations for a user.
-- **Headers**:
-  - `Authorization: Bearer <token>`
+Get user's registrations.
+- **Auth Required**: Yes (self or admin)
 
-## Error Responses
+## Error Handling
 
-All error responses follow this format:
+**Standard Error Format:**
 ```json
 {
   "success": false,
@@ -178,17 +127,23 @@ All error responses follow this format:
 }
 ```
 
-### Common Error Codes
-- `400`: Bad Request - Invalid input data
-- `401`: Unauthorized - Authentication required
-- `403`: Forbidden - Insufficient permissions
-- `404`: Not Found - Resource not found
-- `500`: Internal Server Error - Something went wrong
+**HTTP Status Codes:**
+- `400` - Bad Request (invalid input)
+- `401` - Unauthorized (auth required)
+- `403` - Forbidden (insufficient permissions)
+- `404` - Not Found
+- `500` - Internal Server Error
 
-## Rate Limiting
-- All endpoints are rate limited to 100 requests per 15 minutes per IP address.
-- Authentication endpoints have stricter rate limiting (10 requests per minute).
+## Security & Limits
 
-## Versioning
-- Current API version: `v1`
-- Include the version in the request header: `Accept: application/vnd.clique.v1+json`
+- **Rate Limiting**: 100 req/15min (general), 10 req/min (auth endpoints)
+- **API Version**: v1 (header: `Accept: application/vnd.clique.v1+json`)
+- **Authentication**: JWT Bearer tokens
+- **CORS**: Configured for frontend origin only
+
+## Common Headers
+
+```
+Content-Type: application/json
+Authorization: Bearer <token>
+```

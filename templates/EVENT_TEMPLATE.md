@@ -1,41 +1,65 @@
-# Event Template
+# Event Creation Templates
+
+JSON templates for creating different types of events. For actual IDs, see `IDS_REFERENCE.md`.
 
 ## Cultural Event
+Use `registrationLinksByHouse` for house-specific registration forms.
+
 ```json
 {
-  "title": "Event Title (e.g., Cultural Night — Performances)",
-  "slug": "url-friendly-title-events-2025",
+  "title": "Cultural Night — Performances",
+  "slug": "cultural-night-performances-2025",
   "category": "cultural",
-  "description": "Event description here.",
+  "description": "Annual cultural performances featuring music, dance, and drama from all houses.",
   "startAt": "2025-11-20T17:00:00.000Z",
   "endAt": "2025-11-20T19:00:00.000Z",
-  "location": "Venue Name",
-  "bannerUrl": "https://your-cdn.com/image.png",
+  "location": "Main Auditorium",
+  "bannerUrl": "https://your-cdn.com/cultural-night.png",
   "registrationLinksByHouse": {
-    "PHOENIX": "https://forms.gle/...",
-    "TUSKER": "https://forms.gle/...",
-    "LEO": "https://forms.gle/...",
-    "KONG": "https://forms.gle/..."
+    "PHOENIX": "https://forms.gle/phoenix-registration",
+    "TUSKER": "https://forms.gle/tusker-registration",
+    "LEO": "https://forms.gle/leo-registration",
+    "KONG": "https://forms.gle/kong-registration"
   },
-  "tags": ["tag1", "tag2"],
+  "tags": ["cultural", "performance"],
   "isFeatured": false,
   "isPublished": true
 }
 ```
 
-## Fest/Hackathon Event
+## Fest Event
+Use single `registrationLink` for cross-house events.
+
 ```json
 {
-  "title": "Event Title (e.g., Annual Hackathon 2025)",
-  "slug": "annual-hackathon-2025",
-  "category": "hackathon", // or "fest"
-  "description": "Event description here.",
+  "title": "Tech Fest 2025",
+  "slug": "tech-fest-2025",
+  "category": "fest",
+  "description": "Annual technology festival featuring workshops, competitions, and exhibitions.",
   "startAt": "2025-12-05T10:00:00.000Z",
   "endAt": "2025-12-06T18:00:00.000Z",
-  "location": "Venue Name",
+  "location": "Campus Grounds",
+  "bannerUrl": "https://your-cdn.com/tech-fest.png",
+  "registrationLink": "https://forms.gle/tech-fest-registration",
+  "tags": ["fest", "technology"],
+  "isFeatured": true,
+  "isPublished": true
+}
+```
+
+## Hackathon Event
+```json
+{
+  "title": "Scaler Hackathon 2025",
+  "slug": "scaler-hackathon-2025",
+  "category": "hackathon",
+  "description": "24-hour coding challenge to build innovative solutions.",
+  "startAt": "2025-12-07T10:00:00.000Z",
+  "endAt": "2025-12-08T10:00:00.000Z",
+  "location": "Tech Lab Building",
   "bannerUrl": "https://your-cdn.com/hackathon.png",
-  "registrationLink": "https://forms.gle/...",
-  "tags": ["hackathon", "tech"],
+  "registrationLink": "https://forms.gle/hackathon-registration",
+  "tags": ["hackathon", "coding", "competition"],
   "isFeatured": true,
   "isPublished": true
 }
@@ -44,61 +68,69 @@
 ## Townhall Event
 ```json
 {
-  "title": "Event Title (e.g., Monthly Townhall — November 2025)",
+  "title": "Monthly Townhall — November 2025",
   "slug": "monthly-townhall-nov-2025",
   "category": "townhall",
-  "description": "Detailed description of the townhall agenda, topics to be covered, and any preparation needed from attendees.",
-  "statusText": "Join us for updates on campus initiatives and Q&A with the administration",
+  "description": "Monthly update meeting covering campus initiatives, upcoming events, and open Q&A session.",
+  "statusText": "Join us for updates and Q&A with administration",
   "startAt": "2025-11-10T15:00:00.000Z",
   "endAt": "2025-11-10T16:30:00.000Z",
   "location": "Main Auditorium",
-  "bannerUrl": "https://your-cdn.com/townhall-nov.png",
-  "registrationLink": "https://forms.gle/...",
-  "tags": ["townhall", "meeting"],
+  "bannerUrl": "https://your-cdn.com/townhall.png",
+  "registrationLink": "https://forms.gle/townhall-rsvp",
+  "tags": ["townhall", "meeting", "administration"],
   "isFeatured": true,
   "isPublished": true
 }
 ```
 
-## Leaderboard Update Template
+## Leaderboard Points Update
 ```json
 {
-  "houseId": "<mongo-object-id>",  // Required: MongoDB ObjectId of the house
-  "points": 25,                   // Required: Number (can be negative)
-  "eventId": "<mongo-object-id>", // Optional: MongoDB ObjectId of the event
-  "reason": "Won Hackathon 2025", // Required: Reason for points
-  "category": "hackathon"         // Optional: Category for filtering
+  "houseId": "<house_id>",
+  "points": 25,
+  "eventId": "<event_id>",
+  "reason": "Won Hackathon 2025 - 1st Place",
+  "category": "hackathon"
 }
 ```
 
-### How to Get House IDs:
-1. **From the database**:
-   ```javascript
-   // In MongoDB shell
-   db.houses.find({}, { name: 1 });
-   ```
+**Points can be negative to deduct:**
+```json
+{
+  "houseId": "<house_id>",
+  "points": -10,
+  "reason": "Penalty for rule violation",
+  "category": "penalty"
+}
+```
 
-2. **From the API**:
-   ```http
-   GET /api/houses
-   ```
-   This will return all houses with their IDs.
+---
 
-3. **From the seed data**:
-   The system has these houses by default:
-   - PHOENIX
-   - TUSKER
-   - LEO
-   - KONG
+## Field Reference
 
-   Their IDs are generated when first created, so you'll need to fetch them using one of the methods above.
+| Field | Required | Type | Notes |
+|-------|----------|------|-------|
+| `title` | ✓ | String | Event title |
+| `slug` | ✓ | String | URL-friendly (lowercase, hyphens) |
+| `category` | ✓ | Enum | `fest` \| `hackathon` \| `cultural` \| `townhall` \| `other` |
+| `description` | ✓ | String | Detailed description |
+| `startAt` | ✓ | ISO 8601 | UTC timestamp |
+| `endAt` | ✓ | ISO 8601 | UTC timestamp |
+| `location` | ✓ | String | Venue name |
+| `registrationLink` | ○ | URL | Single registration form |
+| `registrationLinksByHouse` | ○ | Object | House-specific forms (cultural events) |
+| `bannerUrl` | ○ | URL | Event banner image |
+| `tags` | ○ | Array | Searchable tags |
+| `isFeatured` | ○ | Boolean | Show on homepage (default: false) |
+| `isPublished` | ○ | Boolean | Visible to users (default: true) |
+| `statusText` | ○ | String | Custom status message |
 
-## Notes:
-1. `slug` must be URL-friendly (lowercase, hyphen-separated)
-2. `startAt` and `endAt` must be in ISO 8601 format (UTC)
-3. `category` must be one of: `townhall`, `fest`, `cultural`, `hackathon`, `other`
-4. For cultural events, use `registrationLinksByHouse` with all four house keys
-5. For fest/hackathon, use `registrationLink` for a single form
-6. `isPublished: false` will hide the event from public view
-7. Leaderboard points can be positive or negative integers
-8. Include a clear `reason` for all point updates for audit purposes
+## Guidelines
+
+1. **Timestamps**: Always use ISO 8601 format in UTC timezone
+2. **Slugs**: Must be unique, lowercase, hyphen-separated
+3. **Registration Links**: Use `registrationLinksByHouse` for cultural events where houses compete separately
+4. **Points**: Can be positive (award) or negative (deduct)
+5. **Categories**: Choose the most specific category for better filtering
+6. **IDs**: Get actual house and event IDs from `IDS_REFERENCE.md` or via `GET /api/houses`
