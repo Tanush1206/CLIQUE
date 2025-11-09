@@ -354,10 +354,6 @@ npm start  # Runs without nodemon
 3. Make changes and test thoroughly
 4. Submit a pull request with description
 
-## License
-
-MIT License - see LICENSE file for details
-
 ## Support
 
 For issues or questions:
